@@ -62,7 +62,7 @@ public class Application extends android.app.Application {
     /**
      * 获取声音文件的本地地址
      *
-     * @param isTmp
+     * @param isTmp 是否是缓存文件 True-每次返回的地址都为../tmp.mp3，防止用户反复录音产生的大量音频文件
      * @return
      */
     public static File getAudioTmpFile(boolean isTmp) {

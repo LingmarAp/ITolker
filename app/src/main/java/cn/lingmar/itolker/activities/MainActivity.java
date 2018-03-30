@@ -1,5 +1,7 @@
-package cn.lingmar.itolker;
+package cn.lingmar.itolker.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
@@ -23,7 +25,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.lingmar.common.app.Activity;
 import cn.lingmar.common.widget.PortraitView;
-import cn.lingmar.itolker.activities.AccountActivity;
+import cn.lingmar.itolker.R;
+import cn.lingmar.itolker.frags.assist.PermissionsFragment;
 import cn.lingmar.itolker.frags.main.AcitveFragment;
 import cn.lingmar.itolker.frags.main.ContactFragment;
 import cn.lingmar.itolker.frags.main.GroupFragment;
@@ -53,6 +56,11 @@ public class MainActivity extends Activity
 
     private NavHelper<Integer> mNavHelper;
 
+
+    public static void show(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+    }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -81,6 +89,8 @@ public class MainActivity extends Activity
                         this.view.setBackground(resource.getCurrent());
                     }
                 });
+
+        PermissionsFragment.haveAll(this, getSupportFragmentManager());
     }
 
     @Override

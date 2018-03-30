@@ -4,6 +4,7 @@ package cn.lingmar.itolker.frags.account;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +17,8 @@ import butterknife.OnClick;
 import cn.lingmar.common.app.Application;
 import cn.lingmar.common.app.Fragment;
 import cn.lingmar.common.widget.PortraitView;
+import cn.lingmar.factory.Factory;
+import cn.lingmar.factory.net.UploadHelper;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.frags.media.GalleryFragment;
 
@@ -25,6 +28,7 @@ import static android.app.Activity.RESULT_OK;
  * 更新用户信息的界面
  */
 public class UpdateInfoFragment extends Fragment {
+    private static final String TAG = UpdateInfoFragment.class.getSimpleName();
 
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
@@ -87,11 +91,16 @@ public class UpdateInfoFragment extends Fragment {
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
-    }
 
-//    04-4-0代码提交
-//            完成
-//    主界面底部导航栏Fragment跳转封装
-//            图片选择
-//    图片剪切
+        // 拿到本地文件的地址
+        final String localPath = uri.getPath();
+        Log.d(TAG, String.format("localPath: %s", localPath));
+
+        Factory.runOnAsync(new Runnable() {
+            @Override
+            public void run() {
+                UploadHelper.uploadPortrait(localPath);
+            }
+        });
+    }
 }

@@ -37,6 +37,7 @@ dependencies {
     // ButterKnife的相关依赖
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
+
     implementation "com.yalantis:ucrop:$rootProject.ext.ucropVersion"
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
     implementation "pub.devrel:easypermissions:$rootProject.ext.easyPMVersion"
