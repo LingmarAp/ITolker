@@ -192,6 +192,7 @@
         android:layout_height="wrap_content">
 
         <net.qiujuer.genius.ui.widget.Button
+            android:id="@+id/btn_submit"
             android:layout_width="@dimen/len_172"
             android:layout_height="@dimen/len_44"
             android:layout_gravity="center"

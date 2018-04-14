@@ -1,4 +1,4 @@
-package cn.lingmar.factory.model.api;
+package cn.lingmar.factory.model.api.account;
 
 /**
  * 注册使用的请求Model

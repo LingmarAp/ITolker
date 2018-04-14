@@ -44,4 +44,7 @@ ext {
     ossVersion = '2.3.0'
 
     annotationsVersion = '27.1.1'
+
+    gsonVersion = '2.8.0'
+    retrofitVersion = '2.1.0'
 }

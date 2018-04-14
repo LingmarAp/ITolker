@@ -27,8 +27,20 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'
+
+    // 一些工具类
+    implementation "net.qiujuer.genius:kit-reflect:$rootProject.ext.geniusVersion"
+    implementation "net.qiujuer.genius:kit-handler:$rootProject.ext.geniusVersion"
+    // 阿里云上传
     implementation "com.aliyun.dpa:oss-android-sdk:$rootProject.ext.ossVersion"
-    implementation "com.android.support:support-annotations:$rootProject.ext.annotationsVersion"
+
+    // retrofit2
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    // Gson
+    implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+
+//    implementation "com.android.support:support-annotations:$rootProject.ext.annotationsVersion"
 
     api project(':common')
 }
