@@ -42,4 +42,6 @@ ext {
 
     easyPMVersion = "0.3.0"
     ossVersion = '2.3.0'
+
+    annotationsVersion = '27.1.1'
 }
