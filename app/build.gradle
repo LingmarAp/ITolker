@@ -10,6 +10,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //个推相关参数
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "AW8R153xcV6ryptXf5qj07",
+                GETUI_APP_KEY   : "zSqVBBCqP2AOIEFfZoZ5KA",
+                GETUI_APP_SECRET: "67bhY5oCnH7Bq1c9KxxhW4",
+                PACKAGE_NAME    : "cn.lingmar.itolker"
+        ]
     }
     buildTypes {
         release {
@@ -44,4 +52,7 @@ dependencies {
     implementation project(':factory')
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:appcompat-v7:25.4.0'
+
+    // 个推
+    implementation "com.getui:sdk:$rootProject.ext.getuiVersion"
 }

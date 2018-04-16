@@ -45,7 +45,7 @@ public class AccountHelper {
                         bindPush(callback);
                     }
                 } else {
-                    // TODO 对返回的RspModel中的失败的Code进行解析，即系到对应的String资源上
+                    // TODO 对返回的RspModel中的失败的Code进行解析，解析到对应的String资源上
                     // callback.onDataNotAvailable(1);
                 }
             }

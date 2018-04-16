@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme.Main"></activity>
+            android:theme="@style/AppTheme.Main" />
         <activity
             android:name=".activities.AccountActivity"
             android:screenOrientation="portrait"
@@ -31,14 +31,19 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".LaunchActivity">
+        <activity
+            android:name=".activities.UserActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".LaunchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.UserActivity"></activity>
     </application>
 
 </manifest>

@@ -18,7 +18,8 @@ import cn.lingmar.itolker.activities.MainActivity;
 /**
  * 注册界面
  */
-public class RegisterFragment extends PresenterFragment<RegisterContract.Presenter> implements RegisterContract.View {
+public class RegisterFragment extends PresenterFragment<RegisterContract.Presenter>
+        implements RegisterContract.View {
 
     private AccountTrigger mAccountTrigger;
 
