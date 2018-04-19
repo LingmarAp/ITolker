@@ -8,6 +8,7 @@ import cn.lingmar.factory.model.api.account.RegisterModel;
 import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.net.Network;
 import cn.lingmar.factory.net.RemoteService;
+import cn.lingmar.factory.persistence.Account;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,10 +36,14 @@ public class AccountHelper {
                 if (rspModel.success()) {
                     // 拿到实体
                     AccountRspModel accountRspModel = rspModel.getResult();
+                    User user = accountRspModel.getUser();
+                    // 进行的是数据库写入和缓存绑定
+                    user.save();
+                    // 同步到XML持久化中
+                    Account.login(accountRspModel);
+
                     if (accountRspModel.isBind()) {
-                        User user = accountRspModel.getUser();
-                        // TODO 进行的是数据库写入和缓存绑定
-                        // 然后返回
+                        // 直接返回
                         callback.onDataLoaded(user);
                     } else {
                         // 进行绑定
@@ -64,6 +69,6 @@ public class AccountHelper {
      * @param callback callback
      */
     public static void bindPush(final DataSource.Callback<User> callback) {
-
+        Account.setBind(true);
     }
 }

@@ -15,6 +15,7 @@ import net.qiujuer.genius.ui.compat.UiCompat;
 
 import cn.lingmar.common.app.Activity;
 import cn.lingmar.factory.persistence.Account;
+import cn.lingmar.itolker.activities.AccountActivity;
 import cn.lingmar.itolker.activities.MainActivity;
 import cn.lingmar.itolker.frags.assist.PermissionsFragment;
 
@@ -58,10 +59,21 @@ public class LaunchActivity extends Activity {
      * 等待个推框架对我们的PushId设置好值
      */
     private void waitPushReceiverId() {
-        // 如果获取到了PushId
-        if (!TextUtils.isEmpty(Account.getPushId())) {
-            skip();
-            return ;
+        // 判断是否已经登录
+        if (Account.isLogin()) {
+            // 已经登录情况下，判断是否绑定
+            // 如果没有绑定则等待广播接收器进行绑定
+            if (Account.isBind()) {
+                skip();
+                return;
+            }
+        } else {
+            // 没有登录
+            // 如果拿到了PushId，没有登录是不能绑定PushId的
+            if (!TextUtils.isEmpty(Account.getPushId())) {
+                skip();
+                return;
+            }
         }
 
         // 循环等待
@@ -90,8 +102,13 @@ public class LaunchActivity extends Activity {
      * 跳转方法
      */
     private void reallySkip() {
+        // 权限检测，跳转
         if (PermissionsFragment.haveAll(this, getSupportFragmentManager())) {
-            MainActivity.show(this);
+            if (Account.isLogin()) {
+                MainActivity.show(this);
+            } else {
+                AccountActivity.show(this);
+            }
             finish();
         }
     }

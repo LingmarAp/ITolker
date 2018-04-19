@@ -1,33 +1,54 @@
 package cn.lingmar.factory.model.db;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.sql.Date;
 
-public class User {
+@Table(database = AppDatabase.class)
+public class User extends BaseModel {
+    public static final int SEX_MAN = 1;
+    public static final int SEX_WOMAN = 2;
+
+    // 主键
+    @PrimaryKey
     private String id;
     // 用户名
+    @Column
     private String name;
     // 电话
+    @Column
     private String phone;
     // 头像
+    @Column
     private String portrait;
     // 描述
+    @Column
     private String description;
     // 性别
+    @Column
     private int sex = 0;
 
     // 我对某人的备注信息，也应该写入到数据库中
+    @Column
     private String alias;
 
     // 用户关注人的数量
+    @Column
     private int follows;
 
     // 用户粉丝数的数量
+    @Column
     private int following;
 
     // 我与当前User的关系状态，是否已经关注
+    @Column
     private boolean isFollow;
 
     // 时间字段
+    @Column
     private Date modifyAt;
 
     public String getId() {
