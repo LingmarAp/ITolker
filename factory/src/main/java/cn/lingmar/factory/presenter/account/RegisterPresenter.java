@@ -13,6 +13,7 @@ import cn.lingmar.factory.data.DataSource;
 import cn.lingmar.factory.data.helper.AccountHelper;
 import cn.lingmar.factory.model.api.account.RegisterModel;
 import cn.lingmar.factory.model.db.User;
+import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.factory.presenter.BasePresenter;
 
 public class RegisterPresenter extends BasePresenter<RegisterContract.View>
@@ -41,7 +42,7 @@ public class RegisterPresenter extends BasePresenter<RegisterContract.View>
             view.showError(R.string.data_account_register_invalid_parameter_name);
         } else {
             // 进行网络请求
-            RegisterModel model = new RegisterModel(phone, password, name);
+            RegisterModel model = new RegisterModel(phone, password, name, Account.getPushId());
             AccountHelper.register(model, this);
         }
     }

@@ -41,7 +41,6 @@ public class Account {
                 .putString(KEY_TOKEN, token)
                 .putString(KEY_USER_ID, userId)
                 .putString(KEY_ACCOUNT, account)
-                .putBoolean(KEY_IS_BIND, isBind())
                 .apply();
     }
 
@@ -58,7 +57,6 @@ public class Account {
         token = sp.getString(KEY_TOKEN, "");
         userId = sp.getString(KEY_USER_ID, "");
         account = sp.getString(KEY_ACCOUNT, "");
-        isBind = sp.getBoolean(KEY_IS_BIND, false);
     }
 
     public static String getPushId() {
@@ -132,5 +130,9 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+    }
+
+    public static String getToken() {
+        return token;
     }
 }
