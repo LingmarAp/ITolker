@@ -88,7 +88,14 @@ public class Account {
      * @return  true-完善了
      */
     public static boolean isComplete() {
-        return isLogin();
+        if(isLogin()) {
+            User self = getUser();
+            return !TextUtils.isEmpty(self.getDescription())
+                    && !TextUtils.isEmpty(self.getPortrait())
+                    && self.getSex() != 0;
+        }
+        // 用户信息不完全
+        return false;
     }
 
     /**

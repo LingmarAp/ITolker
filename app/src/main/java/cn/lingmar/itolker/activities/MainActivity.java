@@ -2,6 +2,7 @@ package cn.lingmar.itolker.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.lingmar.common.app.Activity;
 import cn.lingmar.common.widget.PortraitView;
+import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.frags.assist.PermissionsFragment;
 import cn.lingmar.itolker.frags.main.AcitveFragment;
@@ -59,6 +61,18 @@ public class MainActivity extends Activity
 
     public static void show(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
+    }
+
+    @Override
+    protected boolean initArgs(Bundle bundle) {
+        // 判断用户信息是否完全
+        if (Account.isComplete()) {
+            // 正常流程
+            return super.initArgs(bundle);
+        } else {
+            UserActivity.show(this);
+            return false;
+        }
     }
 
     @Override

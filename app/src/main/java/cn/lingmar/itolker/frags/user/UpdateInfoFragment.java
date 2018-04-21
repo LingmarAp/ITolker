@@ -3,23 +3,29 @@ package cn.lingmar.itolker.frags.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.yalantis.ucrop.UCrop;
+
+import net.qiujuer.genius.ui.widget.Button;
+import net.qiujuer.genius.ui.widget.Loading;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.lingmar.common.app.Application;
-import cn.lingmar.common.app.Fragment;
+import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.PortraitView;
-import cn.lingmar.factory.Factory;
-import cn.lingmar.factory.net.UploadHelper;
+import cn.lingmar.factory.presenter.user.UpdateInfoContract;
+import cn.lingmar.factory.presenter.user.UpdateInfoPresenter;
 import cn.lingmar.itolker.R;
+import cn.lingmar.itolker.activities.MainActivity;
 import cn.lingmar.itolker.frags.media.GalleryFragment;
 
 import static android.app.Activity.RESULT_OK;
@@ -27,11 +33,31 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 更新用户信息的界面
  */
-public class UpdateInfoFragment extends Fragment {
-    private static final String TAG = UpdateInfoFragment.class.getSimpleName();
+public class UpdateInfoFragment extends PresenterFragment<UpdateInfoContract.Presenter>
+        implements UpdateInfoContract.View {
+
+    @BindView(R.id.im_sex)
+    ImageView mSex;
+
+    @BindView(R.id.edit_desc)
+    EditText mDesc;
 
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
+
+    @BindView(R.id.loading)
+    Loading mLoading;
+
+    @BindView(R.id.btn_submit)
+    Button mSubmit;
+
+
+    // 头像的本地路径
+    private String mPortraitPath;
+    // 性别
+    private boolean isMan = true;
+
+    private static final String TAG = UpdateInfoFragment.class.getSimpleName();
 
     public UpdateInfoFragment() {
         // Required empty public constructor
@@ -80,27 +106,84 @@ public class UpdateInfoFragment extends Fragment {
             if (null != resultUri) {
                 loadPortrait(resultUri);
             } else if (resultCode == UCrop.RESULT_ERROR) {
+                Application.showToast(R.string.data_rsp_error_unknown);
                 final Throwable cropError = UCrop.getError(data);
             }
         }
     }
 
+    /**
+     * 加载Uri到当前头像中
+     * @param uri
+     */
     private void loadPortrait(Uri uri) {
+        // 得到头像地址
+        mPortraitPath = uri.getPath();
+
         Glide.with(getContext())
                 .load(uri)
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
+    }
 
-        // 拿到本地文件的地址
-        final String localPath = uri.getPath();
-        Log.d(TAG, String.format("localPath: %s", localPath));
+    @OnClick(R.id.btn_submit)
+    void OnSubmitClick() {
+        String dec = mDesc.getText().toString();
 
-        Factory.runOnAsync(new Runnable() {
-            @Override
-            public void run() {
-                UploadHelper.uploadPortrait(localPath);
-            }
-        });
+        // 调动P层进行登录
+        mPresenter.update(mPortraitPath, dec, isMan);
+    }
+
+    @OnClick(R.id.im_sex)
+    void OnSexClick() {
+        // 性别图标点击触发的事件
+        isMan = !isMan; // 反转性别
+
+        Drawable drawable = getResources().getDrawable(isMan ?
+                R.drawable.ic_sex_man : R.drawable.ic_sex_woman);
+        mSex.setImageDrawable(drawable);
+        mSex.getBackground().setLevel(isMan ? 0 : 1);
+    }
+
+    @Override
+    protected UpdateInfoContract.Presenter initPresenter() {
+        return new UpdateInfoPresenter(this);
+    }
+
+    @Override
+    public void showError(int str) {
+        super.showError(str);
+        // 当需要显示错误的时候触发，一定是结束了
+
+        // 停止Loading
+        mLoading.stop();
+        // 让控件可以输入
+        mSex.setEnabled(true);
+        mDesc.setEnabled(true);
+        mPortrait.setEnabled(true);
+        // 提交按钮可以进行点击
+        mSubmit.setEnabled(true);
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+        // 正在进行时， 正在进行注册，界面不可操作
+
+        // 开始Loading
+        mLoading.start();
+        // 让控件不可以输入
+        mSex.setEnabled(false);
+        mDesc.setEnabled(false);
+        mPortrait.setEnabled(false);
+        // 提交按钮不可以进行点击
+        mSubmit.setEnabled(false);
+    }
+
+    @Override
+    public void updateSucceed() {
+        MainActivity.show(getContext());
+        getActivity().finish();
     }
 }
