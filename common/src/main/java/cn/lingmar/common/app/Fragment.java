@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.lingmar.common.widget.convention.PlaceHolderView;
 
 /**
  * Created by Lingmar on 2017/10/21.
@@ -18,6 +19,7 @@ import butterknife.Unbinder;
 public abstract class Fragment extends android.support.v4.app.Fragment {
     protected View mRoot;
     protected Unbinder mRootUnBinder;
+    protected PlaceHolderView mPlaceHolderView;
 
     @Override
     public void onAttach(Context context) {
@@ -93,4 +95,12 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
         return false;
     }
 
+    /**
+     * 设置占位布局
+     *
+     * @param mPlaceHolderView
+     */
+    public void setmPlaceHolderView(PlaceHolderView mPlaceHolderView) {
+        this.mPlaceHolderView = mPlaceHolderView;
+    }
 }

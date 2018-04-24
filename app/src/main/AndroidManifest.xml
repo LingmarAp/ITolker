@@ -20,12 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <receiver android:name=".MessageReceiver"
+        <receiver
+            android:name=".MessageReceiver"
             android:enabled="true"
             android:exported="true"
-            android:permission="1000"
-            >
+            android:permission="1000">
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}" />
             </intent-filter>
@@ -45,7 +44,7 @@
         <activity
             android:name=".activities.UserActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Account"></activity>
+            android:theme="@style/AppTheme.Account" />
         <activity
             android:name=".LaunchActivity"
             android:screenOrientation="portrait"
@@ -56,6 +55,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.SearchActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_search"
+            android:theme="@style/AppTheme.TransStatusBar"></activity>
     </application>
 
 </manifest>
