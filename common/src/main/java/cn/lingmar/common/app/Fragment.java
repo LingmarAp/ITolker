@@ -100,7 +100,7 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
      *
      * @param mPlaceHolderView
      */
-    public void setmPlaceHolderView(PlaceHolderView mPlaceHolderView) {
+    public void setPlaceHolderView(PlaceHolderView mPlaceHolderView) {
         this.mPlaceHolderView = mPlaceHolderView;
     }
 }

@@ -1,5 +1,7 @@
 package cn.lingmar.factory.net;
 
+import java.util.List;
+
 import cn.lingmar.factory.model.api.RspModel;
 import cn.lingmar.factory.model.api.account.AccountRspModel;
 import cn.lingmar.factory.model.api.account.LoginModel;
@@ -8,6 +10,7 @@ import cn.lingmar.factory.model.api.user.UserUpdateModel;
 import cn.lingmar.factory.model.card.UserCard;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -49,4 +52,17 @@ public interface RemoteService {
      */
     @PUT("user")
     Call<RspModel<UserCard>> userUpdate(@Body UserUpdateModel model);
+
+    /**
+     * 用户搜索的接口
+     * @param name  用户名
+     * @return List<UserCard>
+     */
+    @GET("user/search/{name}")
+    Call<RspModel<List<UserCard>>> userSearch(@Path("name") String name);
+
+
+    // 用户关注接口
+    @PUT("user/follow/{userId}")
+    Call<RspModel<UserCard>> userFollow(@Path("userId") String userId);
 }

@@ -157,7 +157,7 @@ public abstract class RecyclerAdapter<Data>
     @Override
     public void onClick(View view) {
         ViewHolder holder = (ViewHolder) view.getTag(R.id.tag_recycler_holder);
-        if (this.mDataList != null) {
+        if (this.mListener != null) {
             // 得到viewHolder当前对应的适配器中的坐标
             int pos = holder.getAdapterPosition();
             // 回调方法
@@ -168,7 +168,7 @@ public abstract class RecyclerAdapter<Data>
     @Override
     public boolean onLongClick(View view) {
         ViewHolder holder = (ViewHolder) view.getTag(R.id.tag_recycler_holder);
-        if (this.mDataList != null) {
+        if (this.mListener != null) {
             int pos = holder.getAdapterPosition();
             this.mListener.onItemLongClick(holder, mDataList.get(pos));
 
