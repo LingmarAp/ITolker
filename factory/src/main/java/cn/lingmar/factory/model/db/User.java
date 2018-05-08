@@ -7,8 +7,10 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.sql.Date;
 
+import cn.lingmar.factory.model.Author;
+
 @Table(database = AppDatabase.class)
-public class User extends BaseModel {
+public class User extends BaseModel implements Author {
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
 
@@ -137,5 +139,22 @@ public class User extends BaseModel {
 
     public void setModifyAt(Date modifyAt) {
         this.modifyAt = modifyAt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", portrait='" + portrait + '\'' +
+                ", description='" + description + '\'' +
+                ", sex=" + sex +
+                ", alias='" + alias + '\'' +
+                ", follows=" + follows +
+                ", following=" + following +
+                ", isFollow=" + isFollow +
+                ", modifyAt=" + modifyAt +
+                '}';
     }
 }

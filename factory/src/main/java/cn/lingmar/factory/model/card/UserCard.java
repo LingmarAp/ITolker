@@ -2,9 +2,10 @@ package cn.lingmar.factory.model.card;
 
 import java.sql.Date;
 
+import cn.lingmar.factory.model.Author;
 import cn.lingmar.factory.model.db.User;
 
-public class UserCard {
+public class UserCard implements Author {
 
     private String id;
     // 用户名
