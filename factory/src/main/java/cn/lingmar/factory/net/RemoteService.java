@@ -31,6 +31,7 @@ public interface RemoteService {
 
     /**
      * 登录接口
+     *
      * @param model LoginModel
      * @return RspModel<AccountRspModel>
      */
@@ -39,6 +40,7 @@ public interface RemoteService {
 
     /**
      * 绑定设备ID
+     *
      * @param pushId 设备ID
      * @return RspModel<AccountRspModel>
      */
@@ -47,6 +49,7 @@ public interface RemoteService {
 
     /**
      * 用户更新的接口
+     *
      * @param model UserUpdateModel
      * @return RspModel<UserCard>
      */
@@ -55,7 +58,8 @@ public interface RemoteService {
 
     /**
      * 用户搜索的接口
-     * @param name  用户名
+     *
+     * @param name 用户名
      * @return List<UserCard>
      */
     @GET("user/search/{name}")
@@ -65,4 +69,8 @@ public interface RemoteService {
     // 用户关注接口
     @PUT("user/follow/{userId}")
     Call<RspModel<UserCard>> userFollow(@Path("userId") String userId);
+
+    // 获取联系人列表
+    @GET("user/contact")
+    Call<RspModel<List<UserCard>>> userContacts();
 }

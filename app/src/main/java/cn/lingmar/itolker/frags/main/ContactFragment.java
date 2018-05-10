@@ -3,23 +3,24 @@ package cn.lingmar.itolker.frags.main;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
-import cn.lingmar.common.app.Fragment;
+import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.EmptyView;
 import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.recycler.RecyclerAdapter;
-import cn.lingmar.factory.model.card.UserCard;
 import cn.lingmar.factory.model.db.User;
+import cn.lingmar.factory.presenter.contact.ContactContract;
+import cn.lingmar.factory.presenter.contact.ContactPresenter;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
 
-public class ContactFragment extends Fragment {
+public class ContactFragment extends PresenterFragment<ContactContract.Presenter>
+    implements ContactContract.View{
 
     @BindView(R.id.empty)
     EmptyView mEmptyView;
@@ -69,6 +70,29 @@ public class ContactFragment extends Fragment {
         // 初始化占位布局
         mEmptyView.bind(mRecycler);
         setPlaceHolderView(mEmptyView);
+    }
+
+    @Override
+    protected void onFirstInit() {
+        super.onFirstInit();
+        // 进行一次数据加载
+        mPresenter.start();
+    }
+
+    @Override
+    protected ContactContract.Presenter initPresenter() {
+        return new ContactPresenter(this);
+    }
+
+    @Override
+    public RecyclerAdapter<User> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        // 进行界面操作
+        mPlaceHolderView.triggerOkOrEmpty(mAdapter.getItemCount() > 0);
     }
 
     class ViewHolder extends RecyclerAdapter.ViewHolder<User> {

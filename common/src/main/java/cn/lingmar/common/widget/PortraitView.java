@@ -5,10 +5,9 @@ import android.util.AttributeSet;
 
 import com.bumptech.glide.RequestManager;
 
+import cn.lingmar.common.R;
 import cn.lingmar.factory.model.Author;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import cn.lingmar.lang.R;
 
 /**
  * 头像控件
@@ -29,15 +28,19 @@ public class PortraitView extends CircleImageView {
     }
 
     public void setup(RequestManager manager, Author author) {
-        setup(manager, R.drawable.default_portrait, author.getPortrait());
+        if (author == null) {
+            return;
+        }
+
+        setup(manager, author.getPortrait());
     }
 
     public void setup(RequestManager manager, String url) {
-        setup(manager, url);
+        setup(manager, R.drawable.default_portrait, url);
     }
 
     public void setup(RequestManager manager, int resourceId, String url) {
-        if(url == null) {
+        if (url == null) {
             url = "";
         }
 

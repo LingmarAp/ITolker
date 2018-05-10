@@ -85,10 +85,11 @@ public class Account {
 
     /**
      * 是否已经完善了用户信息
-     * @return  true-完善了
+     *
+     * @return true-完善了
      */
     public static boolean isComplete() {
-        if(isLogin()) {
+        if (isLogin()) {
             User self = getUser();
             return !TextUtils.isEmpty(self.getDescription())
                     && !TextUtils.isEmpty(self.getPortrait())
@@ -109,6 +110,7 @@ public class Account {
 
     /**
      * 设置绑定状态
+     *
      * @param isBind
      */
     public static void setBind(boolean isBind) {
@@ -118,6 +120,7 @@ public class Account {
 
     /**
      * 保存我自己的信息到持久化XML中
+     *
      * @param model
      */
     public static void login(AccountRspModel model) {
@@ -130,6 +133,7 @@ public class Account {
 
     /**
      * 获取当前登录的用户信息
+     *
      * @return user
      */
     public static User getUser() {
@@ -137,6 +141,15 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+    }
+
+    /**
+     * 获取用户id
+     *
+     * @return 用户id
+     */
+    public static String getUserId() {
+        return getUser().getId();
     }
 
     public static String getToken() {
