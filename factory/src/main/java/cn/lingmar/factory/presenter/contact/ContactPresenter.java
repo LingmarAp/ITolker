@@ -1,16 +1,23 @@
 package cn.lingmar.factory.presenter.contact;
 
+import android.support.v7.util.DiffUtil;
+
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.lingmar.factory.data.DataSource;
 import cn.lingmar.factory.data.helper.UserHelper;
 import cn.lingmar.factory.model.card.UserCard;
+import cn.lingmar.factory.model.db.AppDatabase;
 import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.model.db.User_Table;
 import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.factory.presenter.BasePresenter;
+import cn.lingmar.factory.utils.DiffUiDataCallback;
 
 /**
  * 联系人Presenter实现
@@ -26,7 +33,7 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
     public void start() {
         super.start();
 
-        // TODO 加载数据
+        // 加载数据，从本地数据库
         SQLite.select()
                 .from(User.class)
                 .where(User_Table.isFollow.eq(true))
@@ -35,10 +42,11 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
                 .limit(100)
                 .async()
                 .queryListResultCallback((transaction, tResult) -> {
+                    // 刷新到界面
                     getView().getRecyclerAdapter().replace(tResult);
                     getView().onAdapterDataChanged();
                 })
-        .execute();
+                .execute();
 
         // 请求网络数据
         UserHelper.refreshContacts(new DataSource.Callback<List<UserCard>>() {
@@ -49,9 +57,35 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
 
             @Override
             public void onDataLoaded(List<UserCard> userCards) {
+                List<User> users = new ArrayList<>();
+                for (UserCard u : userCards) {
+                    users.add(u.build());
+                }
 
+                DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+                definition.beginTransactionAsync(databaseWrapper -> {
+                    FlowManager.getModelAdapter(User.class)
+                            .saveAll(users);
+                }).build().execute();
+
+                // 对比网络请求的数据和本地数据的差异
+                diff(getView().getRecyclerAdapter().getItems(), users);
             }
         });
 
     }
+
+    private void diff(List<User> oldList, List<User> newList) {
+        // 进行数据对比
+        DiffUtil.Callback callback = new DiffUiDataCallback<>(oldList, newList);
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
+
+        // 对比完成后进行数据的赋值
+        getView().getRecyclerAdapter().replace(newList);
+
+        // 刷新到界面
+        result.dispatchUpdatesTo(getView().getRecyclerAdapter());
+        getView().onAdapterDataChanged();
+    }
+
 }

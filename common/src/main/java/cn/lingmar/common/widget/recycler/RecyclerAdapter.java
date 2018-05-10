@@ -108,6 +108,10 @@ public abstract class RecyclerAdapter<Data>
         return mDataList.size();
     }
 
+    public List<Data> getItems() {
+        return mDataList;
+    }
+
     /**
      * 数据操作
      */
