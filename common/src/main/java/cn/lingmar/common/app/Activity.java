@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import cn.lingmar.common.widget.convention.PlaceHolderView;
 
 /**
  * Created by Lingmar on 2017/10/21.
  */
 
 public abstract class Activity extends AppCompatActivity {
+    protected PlaceHolderView mPlaceHolderView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,12 +26,16 @@ public abstract class Activity extends AppCompatActivity {
             // 得到界面Id并设置到Activity中
             int layId = getContentLayoutId();
             setContentView(layId);
-
+            initBefore();
             initWidget();
             initData();
         } else {
             finish();
         }
+    }
+
+    protected void initBefore() {
+
     }
 
     protected void initWindows() {
@@ -90,4 +96,15 @@ public abstract class Activity extends AppCompatActivity {
 
         finish();
     }
+
+
+    /**
+     * 设置占位布局
+     *
+     * @param mPlaceHolderView 继承了占位布局规范的View
+     */
+    public void setPlaceHolderView(PlaceHolderView mPlaceHolderView) {
+        this.mPlaceHolderView = mPlaceHolderView;
+    }
+
 }

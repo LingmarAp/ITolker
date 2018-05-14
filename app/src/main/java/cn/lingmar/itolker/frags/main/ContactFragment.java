@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.EmptyView;
 import cn.lingmar.common.widget.PortraitView;
@@ -18,6 +19,7 @@ import cn.lingmar.factory.presenter.contact.ContactContract;
 import cn.lingmar.factory.presenter.contact.ContactPresenter;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
+import cn.lingmar.itolker.activities.PersonalActivity;
 
 public class ContactFragment extends PresenterFragment<ContactContract.Presenter>
     implements ContactContract.View{
@@ -114,6 +116,11 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
             mPortrait.setup(Glide.with(ContactFragment.this), user);
             mName.setText(user.getName().toString());
             mDesc.setText(user.getDescription().toString());
+        }
+
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick() {
+            PersonalActivity.show(getContext(), mData.getId());
         }
     }
 }

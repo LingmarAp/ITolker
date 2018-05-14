@@ -1,5 +1,7 @@
 package cn.lingmar.factory.data.helper;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import java.util.List;
 
 import cn.lingmar.factory.Factory;
@@ -9,6 +11,8 @@ import cn.lingmar.factory.model.api.RspModel;
 import cn.lingmar.factory.model.api.user.UserUpdateModel;
 import cn.lingmar.factory.model.card.UserCard;
 import cn.lingmar.factory.model.db.User;
+import cn.lingmar.factory.model.db.User_Table;
+import cn.lingmar.factory.net.Network;
 import cn.lingmar.factory.net.RemoteService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -136,6 +140,59 @@ public class UserHelper {
                         callback.onDataNotAvailable(R.string.data_network_error);
                     }
                 });
+    }
+
+    // 从本地查询一个用户信息
+    public static User findFromLocal(String id) {
+        return SQLite.select()
+                .from(User.class)
+                .where(User_Table.id.eq(id))
+                .querySingle();
+    }
+
+    public static User findFromNet(String id) {
+        RemoteService remoteService = Network.remote();
+        try {
+            Response<RspModel<UserCard>> response = remoteService.userFind(id).execute();
+            UserCard card = response.body().getResult();
+            if(card != null){
+                // TODO 进行数据库存储，但没有进行通知
+                User user = card.build();
+                user.save();
+
+                return user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * 搜索一个用户，优先本地缓存
+     * 本地没有再从网络拉取
+     */
+    public static User search(String id) {
+        User user = findFromLocal(id);
+        if(user == null) {
+            user = findFromNet(id);
+        }
+
+        return user;
+    }
+
+    /**
+     * 搜索一个用户，优先网络
+     * 本地没有再从本地拉取
+     */
+    public static User searchFirstOnNet(String id) {
+        User user = findFromNet(id);
+        if(user == null) {
+            user = findFromLocal(id);
+        }
+
+        return user;
     }
 
 }

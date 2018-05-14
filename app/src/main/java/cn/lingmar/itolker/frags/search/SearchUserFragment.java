@@ -28,6 +28,7 @@ import cn.lingmar.factory.presenter.contact.FollowPresenter;
 import cn.lingmar.factory.presenter.search.SearchContract;
 import cn.lingmar.factory.presenter.search.SearchUserPresenter;
 import cn.lingmar.itolker.R;
+import cn.lingmar.itolker.activities.PersonalActivity;
 import cn.lingmar.itolker.activities.SearchActivity;
 
 /**
@@ -127,6 +128,11 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
 
             mName.setText(userCard.getName());
             mFollow.setEnabled(!userCard.isFollow());
+        }
+
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick() {
+            PersonalActivity.show(getContext(), mData.getId());
         }
 
         @OnClick(R.id.im_follow)

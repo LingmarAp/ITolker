@@ -114,6 +114,14 @@ public class MainActivity extends Activity
         // 程序开始时模拟点击home那个Menu
         Menu menu = mNavigation.getMenu();
         menu.performIdentifierAction(R.id.action_home, 0);
+
+        // 初始化头像加载
+        mPortrait.setup(Glide.with(this), Account.getUser());
+    }
+
+    @OnClick(R.id.im_portrait)
+    void onPortraitClick() {
+        PersonalActivity.show(this, Account.getUserId());
     }
 
     @OnClick(R.id.im_search)
