@@ -5,6 +5,9 @@ import java.sql.Date;
 import cn.lingmar.factory.model.Author;
 import cn.lingmar.factory.model.db.User;
 
+/**
+ * 用户卡片，用于接收服务器返回
+ */
 public class UserCard implements Author {
 
     private String id;
