@@ -14,6 +14,7 @@ import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.model.db.User_Table;
 import cn.lingmar.factory.net.Network;
 import cn.lingmar.factory.net.RemoteService;
+import cn.lingmar.utils.CollectionUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,9 +41,8 @@ public class UserHelper {
                 RspModel<UserCard> rspModel = response.body();
                 if (rspModel.success()) {
                     UserCard userCard = rspModel.getResult();
-                    // 保存用户信息至数据库
-                    User user = userCard.build();
-                    user.save();
+                    // 持久化到本地数据库并通知联系人刷新
+                    Factory.getUserCenter().dispatch(userCard);
 
                     // 返回成功
                     callback.onDataLoaded(userCard);
@@ -101,10 +101,8 @@ public class UserHelper {
                 RspModel<UserCard> rspModel = response.body();
                 if (rspModel.success()) {
                     UserCard userCard = rspModel.getResult();
-                    // 持久化到本地数据库
-                    User user = userCard.build();
-                    user.save();
-                    // TODO 通知联系人刷新
+                    // 持久化到本地数据库并通知联系人刷新
+                    Factory.getUserCenter().dispatch(userCard);
 
                     callback.onDataLoaded(userCard);
                 } else {
@@ -119,8 +117,10 @@ public class UserHelper {
         });
     }
 
-    // 刷新联系人的操作
-    public static void refreshContacts(DataSource.Callback<List<UserCard>> callback) {
+    // 刷新联系人的操作，不需要Callback，直接存储到数据库
+    // 并通过数据库观察者进行通知界面更新
+    // 界面更新的时候进行对比，然后差异更新
+    public static void refreshContacts() {
         RemoteService service = remote();
 
         service.userContacts()
@@ -129,15 +129,19 @@ public class UserHelper {
                     public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
                         RspModel<List<UserCard>> rspModel = response.body();
                         if (rspModel.success()) {
-                            callback.onDataLoaded(rspModel.getResult());
+                            List<UserCard> cards = rspModel.getResult();
+                            if (cards == null || cards.size() == 0)
+                                return ;
+
+                            Factory.getUserCenter().dispatch(CollectionUtil.toArray(cards, UserCard.class));
                         } else {
-                            Factory.decodeRspCode(rspModel, callback);
+                            Factory.decodeRspCode(rspModel, null);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
-                        callback.onDataNotAvailable(R.string.data_network_error);
+                        // nothing
                     }
                 });
     }
@@ -155,10 +159,10 @@ public class UserHelper {
         try {
             Response<RspModel<UserCard>> response = remoteService.userFind(id).execute();
             UserCard card = response.body().getResult();
-            if(card != null){
-                // TODO 进行数据库存储，但没有进行通知
+            if (card != null) {
                 User user = card.build();
-                user.save();
+                // 进行数据库存储并进行通知
+                Factory.getUserCenter().dispatch(card);
 
                 return user;
             }
@@ -175,7 +179,7 @@ public class UserHelper {
      */
     public static User search(String id) {
         User user = findFromLocal(id);
-        if(user == null) {
+        if (user == null) {
             user = findFromNet(id);
         }
 
@@ -188,7 +192,7 @@ public class UserHelper {
      */
     public static User searchFirstOnNet(String id) {
         User user = findFromNet(id);
-        if(user == null) {
+        if (user == null) {
             user = findFromLocal(id);
         }
 

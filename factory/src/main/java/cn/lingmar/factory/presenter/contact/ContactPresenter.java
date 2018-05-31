@@ -2,17 +2,11 @@ package cn.lingmar.factory.presenter.contact;
 
 import android.support.v7.util.DiffUtil;
 
-import com.raizlabs.android.dbflow.config.DatabaseDefinition;
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.lingmar.factory.data.DataSource;
 import cn.lingmar.factory.data.helper.UserHelper;
-import cn.lingmar.factory.model.card.UserCard;
-import cn.lingmar.factory.model.db.AppDatabase;
 import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.model.db.User_Table;
 import cn.lingmar.factory.persistence.Account;
@@ -49,29 +43,22 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
                 .execute();
 
         // 请求网络数据
-        UserHelper.refreshContacts(new DataSource.Callback<List<UserCard>>() {
-            @Override
-            public void onDataNotAvailable(int strRes) {
+        UserHelper.refreshContacts();
 
-            }
+        /*List<User> users = new ArrayList<>();
+        for (UserCard u : userCards) {
+            users.add(u.build());
+        }
 
-            @Override
-            public void onDataLoaded(List<UserCard> userCards) {
-                List<User> users = new ArrayList<>();
-                for (UserCard u : userCards) {
-                    users.add(u.build());
-                }
+        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+        definition.beginTransactionAsync(databaseWrapper -> {
+            FlowManager.getModelAdapter(User.class)
+                    .saveAll(users);
+        }).build().execute();
 
-                DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
-                definition.beginTransactionAsync(databaseWrapper -> {
-                    FlowManager.getModelAdapter(User.class)
-                            .saveAll(users);
-                }).build().execute();
+        // 对比网络请求的数据和本地数据的差异
+        diff(getView().getRecyclerAdapter().getItems(), users);*/
 
-                // 对比网络请求的数据和本地数据的差异
-                diff(getView().getRecyclerAdapter().getItems(), users);
-            }
-        });
 
     }
 

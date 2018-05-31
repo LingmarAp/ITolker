@@ -12,6 +12,12 @@ import java.util.concurrent.Executors;
 
 import cn.lingmar.common.app.Application;
 import cn.lingmar.factory.data.DataSource;
+import cn.lingmar.factory.data.group.GroupCenter;
+import cn.lingmar.factory.data.group.GroupDispatcher;
+import cn.lingmar.factory.data.message.MessageCenter;
+import cn.lingmar.factory.data.message.MessageDispatcher;
+import cn.lingmar.factory.data.user.UserCenter;
+import cn.lingmar.factory.data.user.UserDispatcher;
 import cn.lingmar.factory.model.api.RspModel;
 import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.factory.utils.DBFlowExclusionStrategy;
@@ -156,6 +162,33 @@ public class Factory {
      */
     public static void dispatchPush(String msg) {
         // TODO 处理推送来的消息
+    }
+
+    /**
+     * 获取一个用户中心的实现类
+     *
+     * @return 用户中心的规范接口
+     */
+    public static UserCenter getUserCenter() {
+        return UserDispatcher.instance();
+    }
+
+    /**
+     * 获取一个消息中心的实现类
+     *
+     * @return 消息中心的规范接口
+     */
+    public static MessageCenter getMessageCenter() {
+        return MessageDispatcher.instance();
+    }
+
+    /**
+     * 获取一个群处理中心的实现类
+     *
+     * @return 群中心规范接口
+     */
+    public static GroupCenter getGroupCenter() {
+        return GroupDispatcher.instance();
     }
 
 }

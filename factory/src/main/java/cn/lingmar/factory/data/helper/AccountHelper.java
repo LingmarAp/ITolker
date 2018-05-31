@@ -88,7 +88,7 @@ public class AccountHelper {
                 AccountRspModel accountRspModel = rspModel.getResult();
                 User user = accountRspModel.getUser();
                 // 进行的是数据库写入和缓存绑定
-                user.save();
+                DbHelper.save(User.class, user);
                 // 同步到XML持久化中
                 Account.login(accountRspModel);
 
