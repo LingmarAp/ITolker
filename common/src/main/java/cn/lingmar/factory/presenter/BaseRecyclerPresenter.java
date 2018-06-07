@@ -12,10 +12,10 @@ import cn.lingmar.common.widget.recycler.RecyclerAdapter;
 /**
  * 对RecyclerView进行的一个简单的Presenter封装
  *
- * @param <ViewMode>
+ * @param <ViewModel>
  * @param <View>
  */
-public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerView>
+public class BaseRecyclerPresenter<ViewModel, View extends BaseContract.RecyclerView>
         extends BasePresenter<View> {
 
     public BaseRecyclerPresenter(View view) {
@@ -27,7 +27,7 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
      *
      * @param dataList 新数据
      */
-    protected void refreshData(final List<ViewMode> dataList) {
+    protected void refreshData(final List<ViewModel> dataList) {
         Run.onUiAsync(new Action() {
             @Override
             public void call() {
@@ -36,7 +36,7 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
                     return;
 
                 // 基本的更新数据并刷新界面
-                RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapter();
+                RecyclerAdapter<ViewModel> adapter = view.getRecyclerAdapter();
                 adapter.replace(dataList);
                 view.onAdapterDataChanged();
             }
@@ -50,7 +50,7 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
      * @param dataList   具体的新数据
      */
     protected void refreshData(final DiffUtil.DiffResult diffResult,
-                               final List<ViewMode> dataList) {
+                               final List<ViewModel> dataList) {
         Run.onUiAsync(new Action() {
             @Override
             public void call() {
@@ -60,13 +60,13 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
     }
 
     protected void refreshDataOnUiThread(final DiffUtil.DiffResult diffResult,
-                                         final List<ViewMode> dataList) {
+                                         final List<ViewModel> dataList) {
         View view = getView();
         if (view == null)
             return;
 
         // 基本的更新数据并刷新界面
-        RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapter();
+        RecyclerAdapter<ViewModel> adapter = view.getRecyclerAdapter();
         adapter.getItems().clear();
         adapter.getItems().addAll(dataList);
         // 通知界面刷新占位布局

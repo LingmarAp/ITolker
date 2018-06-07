@@ -10,27 +10,23 @@ import cn.lingmar.factory.data.helper.UserHelper;
 import cn.lingmar.factory.data.user.ContactDataSource;
 import cn.lingmar.factory.data.user.ContactRepository;
 import cn.lingmar.factory.model.db.User;
-import cn.lingmar.factory.presenter.BaseRecyclerPresenter;
+import cn.lingmar.factory.presenter.BaseSourcePresenter;
 import cn.lingmar.factory.utils.DiffUiDataCallback;
 
 /**
  * 联系人Presenter实现
  */
-public class ContactPresenter extends BaseRecyclerPresenter<User, ContactContract.View>
+public class ContactPresenter
+        extends BaseSourcePresenter<User, User, ContactDataSource, ContactContract.View>
         implements ContactContract.Presenter, DataSource.SucceedCallback<List<User>> {
-    private ContactDataSource mSource;
 
     public ContactPresenter(ContactContract.View view) {
-        super(view);
-        this.mSource = new ContactRepository();
+        super(new ContactRepository(), view);
     }
 
     @Override
     public void start() {
         super.start();
-
-        // 进行本地的数据加载，并添加监听
-        mSource.load(this);
 
         // 请求网络数据
         UserHelper.refreshContacts();
@@ -51,12 +47,5 @@ public class ContactPresenter extends BaseRecyclerPresenter<User, ContactContrac
 
         // 调用基类方法进行界面刷新
         refreshData(result, users);
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        // 当界面销毁时，把数据监听一起销毁
-        mSource.dispose();
     }
 }
