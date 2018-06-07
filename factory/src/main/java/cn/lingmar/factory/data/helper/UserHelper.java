@@ -14,7 +14,6 @@ import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.model.db.User_Table;
 import cn.lingmar.factory.net.Network;
 import cn.lingmar.factory.net.RemoteService;
-import cn.lingmar.utils.CollectionUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -133,7 +132,7 @@ public class UserHelper {
                             if (cards == null || cards.size() == 0)
                                 return ;
 
-                            Factory.getUserCenter().dispatch(CollectionUtil.toArray(cards, UserCard.class));
+                            Factory.getUserCenter().dispatch(cards.toArray(new UserCard[0]));
                         } else {
                             Factory.decodeRspCode(rspModel, null);
                         }

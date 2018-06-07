@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import cn.lingmar.factory.model.db.AppDatabase;
 import cn.lingmar.factory.model.db.Group;
@@ -52,7 +51,7 @@ public class DbHelper {
      * @param listener 监听者
      * @param <Model>  表的泛型
      */
-    public static <Model extends BaseModel> void add(final Class<Model> tClass,
+    public static <Model extends BaseModel> void addChangedListener(final Class<Model> tClass,
                                                      ChangedListener<Model> listener) {
         Set<ChangedListener> changedListeners = instance.getListeners(tClass);
         if (changedListeners == null) {
@@ -180,7 +179,7 @@ public class DbHelper {
                     .queryList();
             // 进行一次通知分发
             instance.notifySave(Group.class, groups.toArray(new Group[0]));
-        });
+        }).build().execute();
     }
 
     /**
@@ -199,8 +198,8 @@ public class DbHelper {
         definition.beginTransactionAsync(databaseWrapper -> {
             ModelAdapter<Session> adapter = FlowManager.getModelAdapter(Session.class);
             Session[] sessions = new Session[identifies.size()];
-            int index = 0;
 
+            int index = 0;
             for (Session.Identify identify : identifies) {
                 Session session = SessionHelper.findFromLocal(identify.id);
 
@@ -219,14 +218,7 @@ public class DbHelper {
 
             // 进行一次通知分发
             instance.notifySave(Session.class, sessions);
-        });
-
-        new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return 1;
-            }
-        };
+        }).build().execute();
     }
 
     /**
