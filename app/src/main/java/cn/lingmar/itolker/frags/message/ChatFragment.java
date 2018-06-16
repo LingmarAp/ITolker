@@ -1,6 +1,7 @@
 package cn.lingmar.itolker.frags.message;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,11 +10,24 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import net.qiujuer.genius.ui.compat.UiCompat;
+import net.qiujuer.genius.ui.widget.Loading;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.lingmar.common.app.Fragment;
+import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.adapter.TextWatcherAdapter;
+import cn.lingmar.common.widget.recycler.RecyclerAdapter;
+import cn.lingmar.factory.model.db.Message;
+import cn.lingmar.factory.model.db.User;
+import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
 
@@ -21,6 +35,7 @@ public abstract class ChatFragment extends Fragment
         implements AppBarLayout.OnOffsetChangedListener {
 
     protected String mReceiverId;
+    protected Adapter mAdapter;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -52,6 +67,8 @@ public abstract class ChatFragment extends Fragment
         initEditContent();
         // 基本设置
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new Adapter();
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     protected void initToolbar() {
@@ -95,12 +112,153 @@ public abstract class ChatFragment extends Fragment
 
     @OnClick(R.id.btn_submit)
     void onSubmitClick() {
-        if(!mSubmit.isActivated())
+        if (!mSubmit.isActivated())
             return;
 
     }
 
     private void onMoreClick() {
 
+    }
+
+    private class Adapter extends RecyclerAdapter<Message> {
+
+        @Override
+        protected int getItemViewType(int position, Message message) {
+            // 返回对应的布局xml
+            boolean isRight = Objects.equals(message.getSender().getId(), Account.getUserId());
+
+            switch (message.getType()) {
+                // 文字内容
+                case Message.TYPE_STR:
+                    return isRight ? R.layout.cell_chat_text_right : R.layout.cell_chat_text_left;
+
+                // 语音内容
+                case Message.TYPE_AUDIO:
+                    return isRight ? R.layout.cell_chat_audio_right : R.layout.cell_chat_audio_left;
+
+                // 图片内容
+                case Message.TYPE_PIC:
+                    return isRight ? R.layout.cell_chat_pic_right : R.layout.cell_chat_pic_left;
+
+                // 其他内容: 文件内容
+                default:
+                    return isRight ? R.layout.cell_chat_text_right : R.layout.cell_chat_text_left;
+            }
+        }
+
+        @Override
+        protected ViewHolder<Message> onCreateViewHolder(View root, int viewType) {
+            // 返回对应布局Cell的Holder
+            switch (viewType) {
+                case R.layout.cell_chat_text_left:
+                case R.layout.cell_chat_text_right:
+                    return new TextHolder(root);
+
+                case R.layout.cell_chat_audio_left:
+                case R.layout.cell_chat_audio_right:
+                    return new AudioHolder(root);
+
+                case R.layout.cell_chat_pic_left:
+                case R.layout.cell_chat_pic_right:
+                    return new PicHolder(root);
+
+                default:
+                    return new TextHolder(root);
+            }
+        }
+    }
+
+    class BaseHolder extends RecyclerAdapter.ViewHolder<Message> {
+        @BindView(R.id.im_portrait)
+        PortraitView mPortrait;
+
+        @Nullable // 允许为空，左边没有，右边有
+        @BindView(R.id.loading)
+        Loading mLoading;
+
+        public BaseHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void onBind(Message message) {
+            User sender = message.getSender();
+            sender.load(); // 进行数据加载（DBFlow）
+
+            mPortrait.setup(Glide.with(ChatFragment.this), sender);
+            if (mLoading != null) {
+                // 当前布局在右边
+                int status = message.getStatus();
+                if (status == Message.STATUS_DONE) {
+                    // 正常状态，隐藏Loading
+                    mLoading.stop();
+                    mLoading.setVisibility(View.GONE);
+                } else if (status == Message.STATUS_CREATED) {
+                    // 创建状态
+                    mLoading.setVisibility(View.VISIBLE);
+                    mLoading.setProgress(0);
+                    mLoading.setForegroundColor(UiCompat.getColor(getResources(), R.color.colorAccent));
+                    mLoading.start();
+                } else if (status == Message.STATUS_FAILED) {
+                    // 发送失败状态
+                    mLoading.setVisibility(View.VISIBLE);
+                    mLoading.stop();
+                    mLoading.setProgress(1);
+                    mLoading.setForegroundColor(UiCompat.getColor(getResources(), R.color.alertImportant));
+                }
+
+                mPortrait.setEnabled(status == Message.STATUS_FAILED);
+            }
+        }
+
+        @OnClick(R.id.im_portrait)
+        void onRePushClick() {
+            // 点击头像，进行重新发送
+            if (mLoading != null) {
+                // 必须是右边的布局才允许从新发送
+                // TODO 重新发送
+            }
+        }
+    }
+
+    class TextHolder extends BaseHolder {
+        @BindView(R.id.txt_content)
+        TextView mContent;
+
+        public TextHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void onBind(Message message) {
+            super.onBind(message);
+
+            mContent.setText(message.getContent());
+        }
+    }
+
+    class AudioHolder extends BaseHolder {
+
+        public AudioHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void onBind(Message message) {
+            super.onBind(message);
+        }
+    }
+
+    class PicHolder extends BaseHolder {
+
+        public PicHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void onBind(Message message) {
+            super.onBind(message);
+        }
     }
 }
