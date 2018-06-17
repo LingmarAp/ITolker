@@ -109,6 +109,7 @@ public class MsgCreateModel {    // 客户端生成的UUID
 
     public static MsgCreateModel buildWithMessage(Message message) {
         MsgCreateModel model = new MsgCreateModel();
+        model.id = message.getId();
         model.content = message.getContent();
         model.type = message.getType();
         model.attach = message.getAttach();
