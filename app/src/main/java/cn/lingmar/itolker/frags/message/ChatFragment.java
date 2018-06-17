@@ -3,6 +3,7 @@ package cn.lingmar.itolker.frags.message;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,18 +22,21 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.lingmar.common.app.Fragment;
+import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.adapter.TextWatcherAdapter;
 import cn.lingmar.common.widget.recycler.RecyclerAdapter;
 import cn.lingmar.factory.model.db.Message;
 import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.persistence.Account;
+import cn.lingmar.factory.presenter.message.ChatContract;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
 
-public abstract class ChatFragment extends Fragment
-        implements AppBarLayout.OnOffsetChangedListener {
+public abstract class ChatFragment<InitModel>
+        extends PresenterFragment<ChatContract.Presenter>
+        implements AppBarLayout.OnOffsetChangedListener,
+        ChatContract.View<InitModel> {
 
     protected String mReceiverId;
     protected Adapter mAdapter;
@@ -45,6 +49,9 @@ public abstract class ChatFragment extends Fragment
 
     @BindView(R.id.appbar)
     AppBarLayout mAppBarLayout;
+
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingLayout;
 
     @BindView(R.id.edit_content)
     EditText mContent;
@@ -69,6 +76,13 @@ public abstract class ChatFragment extends Fragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        // 开始初始化操作
+        mPresenter.start();
     }
 
     protected void initToolbar() {
@@ -112,12 +126,28 @@ public abstract class ChatFragment extends Fragment
 
     @OnClick(R.id.btn_submit)
     void onSubmitClick() {
-        if (!mSubmit.isActivated())
-            return;
+        if (mSubmit.isActivated()) {
+            // 发送
+            String content = mContent.getText().toString();
+            mContent.setText("");
+            mPresenter.pushText(content);
+        } else {
+            onMoreClick();
+        }
 
     }
 
     private void onMoreClick() {
+
+    }
+
+    @Override
+    public RecyclerAdapter<Message> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
 
     }
 
@@ -215,9 +245,9 @@ public abstract class ChatFragment extends Fragment
         @OnClick(R.id.im_portrait)
         void onRePushClick() {
             // 点击头像，进行重新发送
-            if (mLoading != null) {
+            if (mLoading != null && mPresenter.rePush(mData)) {
                 // 必须是右边的布局才允许从新发送
-                // TODO 重新发送
+                updateData(mData);
             }
         }
     }

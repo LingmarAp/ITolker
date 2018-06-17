@@ -6,7 +6,9 @@ import cn.lingmar.factory.model.api.RspModel;
 import cn.lingmar.factory.model.api.account.AccountRspModel;
 import cn.lingmar.factory.model.api.account.LoginModel;
 import cn.lingmar.factory.model.api.account.RegisterModel;
+import cn.lingmar.factory.model.api.message.MsgCreateModel;
 import cn.lingmar.factory.model.api.user.UserUpdateModel;
+import cn.lingmar.factory.model.card.MessageCard;
 import cn.lingmar.factory.model.card.UserCard;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -77,4 +79,8 @@ public interface RemoteService {
     // 获取用户信息，根据用户Id
     @GET("user/{userId}")
     Call<RspModel<UserCard>> userFind(@Path("userId") String userId);
+
+    // 获取用户信息，根据用户Id
+    @POST("msg")
+    Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
 }

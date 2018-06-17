@@ -3,20 +3,30 @@ package cn.lingmar.itolker.frags.message;
 
 import android.app.Fragment;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.lingmar.common.widget.PortraitView;
+import cn.lingmar.factory.model.db.User;
+import cn.lingmar.factory.presenter.message.ChatContract;
+import cn.lingmar.factory.presenter.message.ChatUserPresenter;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.PersonalActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatUserFragment extends ChatFragment {
+public class ChatUserFragment extends ChatFragment<User>
+        implements ChatContract.UserView {
     private final String TAG = ChatUserFragment.class.getSimpleName();
 
     @BindView(R.id.im_portrait)
@@ -31,6 +41,21 @@ public class ChatUserFragment extends ChatFragment {
     @Override
     protected int getContentLayoutId() {
         return R.layout.fragment_chat_user;
+    }
+
+    @Override
+    protected void initWidget(View root) {
+        super.initWidget(root);
+
+        Glide.with(this)
+                .load(R.drawable.default_banner_chat)
+                .centerCrop()
+                .into(new ViewTarget<CollapsingToolbarLayout, GlideDrawable>(mCollapsingLayout) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        this.view.setContentScrim(resource.getCurrent());
+                    }
+                });
     }
 
     @Override
@@ -101,5 +126,16 @@ public class ChatUserFragment extends ChatFragment {
     @OnClick(R.id.im_portrait)
     void onPortraitClick() {
         PersonalActivity.show(getContext(), mReceiverId);
+    }
+
+    @Override
+    protected ChatContract.Presenter initPresenter() {
+        return new ChatUserPresenter(this, mReceiverId);
+    }
+
+    @Override
+    public void onInit(User user) {
+        mPortrait.setup(Glide.with(this), user.getPortrait());
+        mCollapsingLayout.setTitle(user.getName());
     }
 }
