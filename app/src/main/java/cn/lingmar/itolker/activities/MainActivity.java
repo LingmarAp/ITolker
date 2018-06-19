@@ -29,7 +29,7 @@ import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.frags.assist.PermissionsFragment;
-import cn.lingmar.itolker.frags.main.AcitveFragment;
+import cn.lingmar.itolker.frags.main.ActiveFragment;
 import cn.lingmar.itolker.frags.main.ContactFragment;
 import cn.lingmar.itolker.frags.main.GroupFragment;
 import cn.lingmar.itolker.helper.NavHelper;
@@ -88,7 +88,7 @@ public class MainActivity extends Activity
         mNavHelper = new NavHelper<>(this, R.id.lay_container,
                 getSupportFragmentManager(), this);
         mNavHelper
-                .add(R.id.action_home, new NavHelper.Tab<>(AcitveFragment.class, R.string.action_home))
+                .add(R.id.action_home, new NavHelper.Tab<>(ActiveFragment.class, R.string.action_home))
                 .add(R.id.action_contact, new NavHelper.Tab<>(ContactFragment.class, R.string.action_contact))
                 .add(R.id.action_group, new NavHelper.Tab<>(GroupFragment.class, R.string.action_group));
 

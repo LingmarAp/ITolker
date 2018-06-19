@@ -9,6 +9,8 @@ import cn.lingmar.common.app.Activity;
 import cn.lingmar.common.app.Fragment;
 import cn.lingmar.factory.model.Author;
 import cn.lingmar.factory.model.db.Group;
+import cn.lingmar.factory.model.db.Message;
+import cn.lingmar.factory.model.db.Session;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.frags.message.ChatGroupFragment;
 import cn.lingmar.itolker.frags.message.ChatUserFragment;
@@ -21,6 +23,23 @@ public class MessageActivity extends Activity {
 
     private String mReceiverId;
     private boolean mIsGroup;
+
+    /**
+     * 显示人的聊天界面
+     *
+     * @param context 上下文
+     * @param session 人的信息
+     */
+    public static void show(Context context, Session session) {
+        if (context == null || session == null || TextUtils.isEmpty(session.getId()))
+            return;
+        Intent intent = new Intent(context, MessageActivity.class);
+        intent.putExtra(KEY_RECEIVER_ID, session.getId());
+        intent.putExtra(KEY_RECEIVER_IS_GROUP,
+                session.getReceiverType() == Message.RECEIVER_TYPE_GROUP);
+
+        context.startActivity(intent);
+    }
 
     /**
      * 显示人的聊天界面
