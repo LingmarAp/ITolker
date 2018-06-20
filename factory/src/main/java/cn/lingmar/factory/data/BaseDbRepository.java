@@ -22,8 +22,8 @@ public abstract class BaseDbRepository<Data extends BaseDbModel> implements DbDa
         DbHelper.ChangedListener<Data>,
         QueryTransaction.QueryResultListCallback<Data> {
     private SucceedCallback<List<Data>> callback;
-    private final List<Data> dataList = new LinkedList<>();
     private Class<Data> dataClass;
+    protected final LinkedList<Data> dataList = new LinkedList<>();
 
     public BaseDbRepository() {
         // 拿到当前类的泛型数组信息

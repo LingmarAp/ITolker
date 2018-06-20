@@ -16,6 +16,7 @@ import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.recycler.RecyclerAdapter;
 import cn.lingmar.factory.model.db.Session;
 import cn.lingmar.factory.presenter.message.SessionContract;
+import cn.lingmar.factory.presenter.message.SessionPresenter;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
 import cn.lingmar.utils.DateTimeUtil;
@@ -50,7 +51,7 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
             @Override
             protected int getItemViewType(int position, Session session) {
                 // 返回cell的布局id
-                return R.layout.cell_contact_list;
+                return R.layout.cell_chat_list;
             }
 
             @Override
@@ -75,11 +76,12 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
     @Override
     protected void initData() {
         super.initData();
+        mPresenter.start();
     }
 
     @Override
     protected SessionContract.Presenter initPresenter() {
-        return null;
+        return new SessionPresenter(this);
     }
 
     @Override
