@@ -77,13 +77,9 @@ public class LaunchActivity extends Activity {
         }
 
         // 循环等待
+        // noinspection Convert2MethodRef
         getWindow().getDecorView()
-                .postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        waitPushReceiverId();
-                    }
-                }, 500);
+                .postDelayed(() -> waitPushReceiverId(), 500);
     }
 
     /**

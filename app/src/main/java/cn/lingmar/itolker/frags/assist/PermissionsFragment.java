@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.lingmar.common.app.Application;
+import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.itolker.R;
+import cn.lingmar.itolker.activities.AccountActivity;
+import cn.lingmar.itolker.activities.MainActivity;
 import cn.lingmar.itolker.frags.media.GalleryFragment;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
@@ -65,27 +68,42 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
 
     /**
      * 刷新布局中的图片的状态
+     *
      * @param view
      */
     private void refreshState(View view) {
         Context context = getContext();
 
         view.findViewById(R.id.im_state_permission_network)
-                .setVisibility(haveNetword(context) ? View.VISIBLE : View.INVISIBLE);
+                .setVisibility(haveNetwork(context) ? View.VISIBLE : View.INVISIBLE);
         view.findViewById(R.id.im_state_permission_read)
                 .setVisibility(haveReadPerm(context) ? View.VISIBLE : View.INVISIBLE);
         view.findViewById(R.id.im_state_permission_write)
                 .setVisibility(haveWritePerm(context) ? View.VISIBLE : View.INVISIBLE);
         view.findViewById(R.id.im_state_permission_record_audio)
                 .setVisibility(haveRecordAudioPerm(context) ? View.VISIBLE : View.INVISIBLE);
+
+        // 如果权限设置成功
+        if (haveNetwork(context) && haveReadPerm(context)
+                && haveWritePerm(context) && haveRecordAudioPerm(context)) {
+            if (Account.isLogin()) {
+                // 跳转到主界面
+                MainActivity.show(context);
+            } else {
+                // 跳转到登录界面
+                AccountActivity.show(context);
+            }
+            getActivity().finish();
+        }
     }
 
     /**
      * 获取是否有网络权限
+     *
      * @param context
      * @return
      */
-    private static boolean haveNetword(Context context) {
+    private static boolean haveNetwork(Context context) {
         String[] perms = new String[]{
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_NETWORK_STATE,
@@ -97,6 +115,7 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
 
     /**
      * 获取是否有文件读取权限
+     *
      * @param context
      * @return
      */
@@ -110,6 +129,7 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
 
     /**
      * 获取是否有文件写入权限
+     *
      * @param context
      * @return
      */
@@ -123,6 +143,7 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
 
     /**
      * 获取是否有录音权限
+     *
      * @param context
      * @return
      */
@@ -136,6 +157,7 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
 
     /**
      * 私有的show方法
+     *
      * @param manager
      * @return
      */
@@ -143,23 +165,24 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
         // 调用BottomSheetDialogFragment以及准备好的显示方法
         new PermissionsFragment()
                 .show(manager, PermissionsFragment.class
-                .getName());
+                        .getName());
     }
 
     /**
      * 检查是否具有权限
+     *
      * @param context
      * @param manager
      * @return
      */
     public static boolean haveAll(Context context, FragmentManager manager) {
         // 检查是否具有所有的权限
-        boolean haveAll = haveNetword(context)
+        boolean haveAll = haveNetwork(context)
                 && haveReadPerm(context)
                 && haveWritePerm(context)
                 && haveRecordAudioPerm(context);
 
-        if(!haveAll){
+        if (!haveAll) {
             show(manager);
         }
 
@@ -180,7 +203,7 @@ public class PermissionsFragment extends BottomSheetDialogFragment implements Ea
                 Manifest.permission.RECORD_AUDIO
         };
 
-        if(EasyPermissions.hasPermissions(getContext(), perms)) {
+        if (EasyPermissions.hasPermissions(getContext(), perms)) {
             Application.showToast(R.string.label_permission_ok);
             // Fragment 中调用getView得到根布局，前提是在OnCreateView方法之后
             refreshState(getView());
