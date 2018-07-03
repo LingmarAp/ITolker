@@ -105,15 +105,16 @@ public class UpdateInfoFragment extends PresenterFragment<UpdateInfoContract.Pre
             final Uri resultUri = UCrop.getOutput(data);
             if (null != resultUri) {
                 loadPortrait(resultUri);
-            } else if (resultCode == UCrop.RESULT_ERROR) {
-                Application.showToast(R.string.data_rsp_error_unknown);
-                final Throwable cropError = UCrop.getError(data);
             }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            Application.showToast(R.string.data_rsp_error_unknown);
+            final Throwable cropError = UCrop.getError(data);
         }
     }
 
     /**
      * 加载Uri到当前头像中
+     *
      * @param uri
      */
     private void loadPortrait(Uri uri) {
