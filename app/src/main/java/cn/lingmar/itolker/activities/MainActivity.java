@@ -135,8 +135,9 @@ public class MainActivity extends Activity
     @OnClick(R.id.btn_action)
     void OnActionClick() {
         // 判断当前界面是群还是联系人界面
-        if (Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group)) {
-            // TODO 打开群创建界面
+        if (Objects.equals(mNavHelper.getCurrentTab().extra, R.string.action_group)) {
+            // 打开群创建界面
+            GroupCreateActivity.show(this);
         } else {
             SearchActivity.show(this, SearchActivity.TYPE_USER);
         }
