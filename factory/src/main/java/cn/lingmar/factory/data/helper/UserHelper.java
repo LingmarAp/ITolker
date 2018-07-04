@@ -12,8 +12,10 @@ import cn.lingmar.factory.model.api.user.UserUpdateModel;
 import cn.lingmar.factory.model.card.UserCard;
 import cn.lingmar.factory.model.db.User;
 import cn.lingmar.factory.model.db.User_Table;
+import cn.lingmar.factory.model.db.view.UserSampleModel;
 import cn.lingmar.factory.net.Network;
 import cn.lingmar.factory.net.RemoteService;
+import cn.lingmar.factory.persistence.Account;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -130,7 +132,7 @@ public class UserHelper {
                         if (rspModel.success()) {
                             List<UserCard> cards = rspModel.getResult();
                             if (cards == null || cards.size() == 0)
-                                return ;
+                                return;
 
                             Factory.getUserCenter().dispatch(cards.toArray(new UserCard[0]));
                         } else {
@@ -196,6 +198,34 @@ public class UserHelper {
         }
 
         return user;
+    }
+
+    /**
+     * 获取联系人
+     *
+     * @return 用户列表
+     */
+    public static List<User> getContact() {
+        // 加载数据，从本地数据库
+        return SQLite.select()
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name, true)
+                .limit(100)
+                .queryList();
+    }
+
+    public static List<UserSampleModel> getSampleContact() {
+        // 加载数据，从本地数据库
+        return SQLite.select(User_Table.id.withTable().as("id"),
+                User_Table.name.withTable().as("name"),
+                User_Table.portrait.withTable().as("portrait"))
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name, true)
+                .queryCustomList(UserSampleModel.class);
     }
 
 }

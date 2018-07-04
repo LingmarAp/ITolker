@@ -19,8 +19,8 @@ public interface GroupCreateContract {
 
     class ViewModel {
         // 用户信息
-        Author author;
+        public Author author;
         // 是否选中
-        boolean isSelect;
+        public boolean isSelect;
     }
 }
