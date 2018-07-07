@@ -6,8 +6,10 @@ import cn.lingmar.factory.model.api.RspModel;
 import cn.lingmar.factory.model.api.account.AccountRspModel;
 import cn.lingmar.factory.model.api.account.LoginModel;
 import cn.lingmar.factory.model.api.account.RegisterModel;
+import cn.lingmar.factory.model.api.group.GroupCreateModel;
 import cn.lingmar.factory.model.api.message.MsgCreateModel;
 import cn.lingmar.factory.model.api.user.UserUpdateModel;
+import cn.lingmar.factory.model.card.GroupCard;
 import cn.lingmar.factory.model.card.MessageCard;
 import cn.lingmar.factory.model.card.UserCard;
 import retrofit2.Call;
@@ -83,4 +85,12 @@ public interface RemoteService {
     // 获取用户信息，根据用户Id
     @POST("msg")
     Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+
+    // 创建群
+    @POST("group")
+    Call<RspModel<GroupCard>> groupCreate(@Body GroupCreateModel model);
+
+    // 查找群
+    @POST("group/{groupId}")
+    Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
 }

@@ -1,10 +1,14 @@
 package cn.lingmar.common.app;
 
+import android.app.ProgressDialog;
+
+import cn.lingmar.common.R;
 import cn.lingmar.factory.presenter.BaseContract;
 
 public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Presenter> extends ToolbarActivity
         implements BaseContract.View<Presenter> {
     protected Presenter mPresenter;
+    protected ProgressDialog mLoadingDialog;
 
     @Override
     protected void initBefore() {
@@ -30,6 +34,8 @@ public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Pr
 
     @Override
     public void showError(int str) {
+        hideDialogLoading();
+
         // 显示错误，优先使用占位布局
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerError(str);
@@ -44,10 +50,32 @@ public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Pr
         // 显示一个Loading
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerLoading();
+        } else {
+            ProgressDialog dialog = mLoadingDialog;
+            if (dialog == null) {
+                dialog = new ProgressDialog(this, R.style.AppTheme_Dialog_Alert_Light);
+                dialog.setCanceledOnTouchOutside(false); // 不可以触摸取消
+                dialog.setCancelable(true);
+                dialog.setOnCancelListener(dialog1 -> finish());
+                mLoadingDialog = dialog;
+            }
+
+            dialog.setMessage(getText(R.string.prompt_loading));
+            dialog.show();
+        }
+    }
+
+    private void hideDialogLoading() {
+        ProgressDialog dialog = mLoadingDialog;
+        if (dialog != null) {
+            mLoadingDialog = null;
+            dialog.dismiss();
         }
     }
 
     protected void hideLoading() {
+        hideDialogLoading();
+
         // 隐藏一个Loading
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerOk();
