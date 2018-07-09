@@ -7,9 +7,14 @@ import cn.lingmar.factory.model.api.account.AccountRspModel;
 import cn.lingmar.factory.model.api.account.LoginModel;
 import cn.lingmar.factory.model.api.account.RegisterModel;
 import cn.lingmar.factory.model.api.group.GroupCreateModel;
+import cn.lingmar.factory.model.api.group.GroupJoinModel;
+import cn.lingmar.factory.model.api.group.GroupMemberAddModel;
+import cn.lingmar.factory.model.api.group.GroupMemberUpdateModel;
 import cn.lingmar.factory.model.api.message.MsgCreateModel;
 import cn.lingmar.factory.model.api.user.UserUpdateModel;
+import cn.lingmar.factory.model.card.ApplyCard;
 import cn.lingmar.factory.model.card.GroupCard;
+import cn.lingmar.factory.model.card.GroupMemberCard;
 import cn.lingmar.factory.model.card.MessageCard;
 import cn.lingmar.factory.model.card.UserCard;
 import retrofit2.Call;
@@ -93,4 +98,31 @@ public interface RemoteService {
     // 查找群
     @POST("group/{groupId}")
     Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
+
+    // 搜索群
+    @GET("group/search/{name}")
+    Call<RspModel<List<GroupCard>>> groupSearch(@Path(value = "name", encoded = true) String name);
+
+    // 我的群列表
+    @GET("group/list/{date}")
+    Call<RspModel<List<GroupCard>>> groups(@Path(value = "date", encoded = true) String date);
+
+    // 拉取一个群的所有成员
+    @GET("group/{groupId}/members")
+    Call<RspModel<List<GroupMemberCard>>> groupMembers(@Path("groupId") String id);
+
+    // 给群添加成员（管理员权限）
+    @POST("group/{groupId}/member")
+    Call<RspModel<List<GroupMemberCard>>> groupMemberAdd(@Path("groupId") String groupId,
+                                             GroupMemberAddModel model);
+
+    // 给群添加成员（管理员权限）
+    @PUT("group/modify/{memberId}")
+    Call<RspModel<GroupMemberCard>> groupMemberModify(@Path("memberId") String memberId,
+                                                      GroupMemberUpdateModel model);
+
+    // 给群添加成员（管理员权限）
+    @POST("group/applyJoin/{groupId}")
+    Call<RspModel<ApplyCard>> groupMemberJoin(@Path("groupId") String groupId,
+                                              GroupJoinModel model);
 }

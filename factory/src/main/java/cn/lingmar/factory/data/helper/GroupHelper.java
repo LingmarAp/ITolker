@@ -2,6 +2,8 @@ package cn.lingmar.factory.data.helper;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.List;
+
 import cn.lingmar.factory.Factory;
 import cn.lingmar.factory.R;
 import cn.lingmar.factory.data.DataSource;
@@ -16,6 +18,8 @@ import cn.lingmar.factory.net.RemoteService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static cn.lingmar.factory.net.Network.remote;
 
 /**
  * 对群的辅助工具类
@@ -79,5 +83,29 @@ public class GroupHelper {
                         callback.onDataNotAvailable(R.string.data_network_error);
                     }
                 });
+    }
+
+    public static Call search(String name, DataSource.Callback<List<GroupCard>> callback) {
+        RemoteService service = remote();
+        Call<RspModel<List<GroupCard>>> call = service.groupSearch(name);
+
+        call.enqueue(new Callback<RspModel<List<GroupCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<GroupCard>>> call, Response<RspModel<List<GroupCard>>> response) {
+                RspModel<List<GroupCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    callback.onDataLoaded(rspModel.getResult());
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<GroupCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+
+        return call;
     }
 }
