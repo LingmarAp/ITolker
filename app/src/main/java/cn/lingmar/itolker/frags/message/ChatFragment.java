@@ -1,6 +1,7 @@
 package cn.lingmar.itolker.frags.message;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,7 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +62,9 @@ public abstract class ChatFragment<InitModel>
     @BindView(R.id.btn_submit)
     View mSubmit;
 
+    @BindView(R.id.im_header)
+    ImageView mHeader;
+
     @Override
     protected void initArgs(Bundle bundle) {
         super.initArgs(bundle);
@@ -66,7 +72,20 @@ public abstract class ChatFragment<InitModel>
     }
 
     @Override
+    protected final int getContentLayoutId() {
+        return R.layout.fragment_chat_common;
+    }
+
+    @LayoutRes
+    protected abstract int getHeaderLayoutId();
+
+    @Override
     protected void initWidget(View root) {
+        // 在布局加载之前替换顶部占位布局
+        ViewStub stub = (ViewStub) root.findViewById(R.id.view_stub_header);
+        stub.setLayoutResource(getHeaderLayoutId());
+        stub.inflate();
+
         super.initWidget(root);
 
         initAppbar();
