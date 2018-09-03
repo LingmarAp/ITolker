@@ -73,7 +73,12 @@
         <activity
             android:name=".activities.GroupCreateActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Message.Create"></activity>
+            android:theme="@style/AppTheme.Message.Create" />
+        <activity android:name=".activities.GroupMemberActivity"
+            android:label="@string/title_member_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar"
+            ></activity>
     </application>
 
 </manifest>

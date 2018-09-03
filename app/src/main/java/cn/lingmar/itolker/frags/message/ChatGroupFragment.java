@@ -23,6 +23,7 @@ import cn.lingmar.factory.model.db.view.MemberUserModel;
 import cn.lingmar.factory.presenter.message.ChatContract;
 import cn.lingmar.factory.presenter.message.ChatGroupPresenter;
 import cn.lingmar.itolker.R;
+import cn.lingmar.itolker.activities.GroupMemberActivity;
 import cn.lingmar.itolker.activities.PersonalActivity;
 
 /**
@@ -139,7 +140,8 @@ public class ChatGroupFragment extends ChatFragment<Group>
         if (moreCount > 0) {
             mMemberMore.setText(String.format("+%s", moreCount));
             mMemberMore.setOnClickListener(v -> {
-                // TODO 显示成员列表
+                // 显示成员列表
+                GroupMemberActivity.show(getContext(), mReceiverId);
             });
         } else {
             mMemberMore.setVisibility(View.GONE);
@@ -154,7 +156,8 @@ public class ChatGroupFragment extends ChatFragment<Group>
         mToolbar.inflateMenu(R.menu.chat_group);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_add) {
-                // TODO 进行成员添加操作
+                // 进行成员添加操作
+                GroupMemberActivity.showAdmin(getContext(), mReceiverId);
                 return true;
             }
             return false;
