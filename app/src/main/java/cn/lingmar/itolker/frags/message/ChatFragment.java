@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
+import net.qiujuer.widget.airpanel.AirPanel;
+import net.qiujuer.widget.airpanel.Util;
 
 import java.util.Objects;
 
@@ -36,6 +38,7 @@ import cn.lingmar.factory.persistence.Account;
 import cn.lingmar.factory.presenter.message.ChatContract;
 import cn.lingmar.itolker.R;
 import cn.lingmar.itolker.activities.MessageActivity;
+import cn.lingmar.itolker.frags.panel.PanelFragment;
 
 public abstract class ChatFragment<InitModel>
         extends PresenterFragment<ChatContract.Presenter>
@@ -66,6 +69,10 @@ public abstract class ChatFragment<InitModel>
     @BindView(R.id.im_header)
     ImageView mHeader;
 
+    // 控制底部面板与软键盘过度的控件
+    private AirPanel.Boss mPanelBoss;
+    private PanelFragment mPanelFragment;
+
     @Override
     protected void initArgs(Bundle bundle) {
         super.initArgs(bundle);
@@ -88,6 +95,13 @@ public abstract class ChatFragment<InitModel>
         stub.inflate();
 
         super.initWidget(root);
+
+        // 初始化面板
+        mPanelBoss = (AirPanel.Boss) root.findViewById(R.id.lay_content);
+        mPanelBoss.setup(() -> {
+            Util.hideKeyboard(mContent);
+        });
+        mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
 
         initAppbar();
         initToolbar();
@@ -137,14 +151,19 @@ public abstract class ChatFragment<InitModel>
 
     @OnClick(R.id.btn_face)
     void onFaceClick() {
+        mPanelFragment.showFace();
+        mPanelBoss.openPanel();
     }
 
     @OnClick(R.id.btn_record)
     void onRecordClick() {
+        mPanelFragment.showRecord();
+        mPanelBoss.openPanel();
     }
 
     @OnTouch(R.id.edit_content)
     boolean onEditClick() {
+        mPanelFragment.showGallery();
         mAppBarLayout.setExpanded(false);
         return false;
     }
@@ -163,7 +182,7 @@ public abstract class ChatFragment<InitModel>
     }
 
     private void onMoreClick() {
-
+        mPanelBoss.openPanel();
     }
 
     @Override

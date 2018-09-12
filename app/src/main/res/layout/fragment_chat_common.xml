@@ -2,10 +2,11 @@
 <cn.lingmar.common.widget.MessageLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".frags.message.ChatUserFragment">
 
     <android.support.design.widget.CoordinatorLayout
@@ -81,7 +82,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/textPrimary"
             android:textColorHint="@color/textSecond"
-            android:textCursorDrawable="@color/textSecond"/>
+            android:textCursorDrawable="@color/textSecond" />
 
         <ImageView
             android:id="@+id/btn_submit"
@@ -93,4 +94,18 @@
             android:src="@drawable/ic_submit"
             android:tint="@color/textPrimary" />
     </LinearLayout>
+
+    <net.qiujuer.widget.airpanel.AirPanelFrameLayout
+        android:id="@id/airPanelSubLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_300"
+        android:visibility="gone">
+
+        <fragment
+            android:id="@+id/frag_panel"
+            class="cn.lingmar.itolker.frags.panel.PanelFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </net.qiujuer.widget.airpanel.AirPanelFrameLayout>
 </cn.lingmar.common.widget.MessageLayout>

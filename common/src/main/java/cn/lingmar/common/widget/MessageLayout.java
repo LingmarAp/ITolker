@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
-public class MessageLayout extends LinearLayout {
+import net.qiujuer.widget.airpanel.AirPanelLinearLayout;
+
+public class MessageLayout extends AirPanelLinearLayout {
     public MessageLayout(Context context) {
         super(context);
     }

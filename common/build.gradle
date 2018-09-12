@@ -39,6 +39,9 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
 
+    // 空气面板
+    implementation "net.qiujuer.widget:airpanel:${rootProject.ext.airpanelVersion}"
+
 
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     testImplementation 'junit:junit:4.12'
