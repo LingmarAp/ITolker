@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.adapter.TextWatcherAdapter;
@@ -136,11 +137,16 @@ public abstract class ChatFragment<InitModel>
 
     @OnClick(R.id.btn_face)
     void onFaceClick() {
-
     }
 
     @OnClick(R.id.btn_record)
     void onRecordClick() {
+    }
+
+    @OnTouch(R.id.edit_content)
+    boolean onEditClick() {
+        mAppBarLayout.setExpanded(false);
+        return false;
     }
 
     @OnClick(R.id.btn_submit)
@@ -167,7 +173,8 @@ public abstract class ChatFragment<InitModel>
 
     @Override
     public void onAdapterDataChanged() {
-
+        // 跳转到最底部
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
     }
 
     private class Adapter extends RecyclerAdapter<Message> {

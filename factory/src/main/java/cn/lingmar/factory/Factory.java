@@ -1,5 +1,6 @@
 package cn.lingmar.factory;
 
+import android.content.Intent;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
@@ -162,7 +163,10 @@ public class Factory {
      * 重新登录
      */
     public static void logout() {
-
+        // 发送退出账户的广播
+        Intent intent = new Intent();
+        intent.setAction("cn.lingmar.LOGOUT");
+        app().sendBroadcast(intent);
     }
 
     /**

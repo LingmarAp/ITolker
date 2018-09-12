@@ -13,6 +13,7 @@ import java.util.Objects;
 import cn.lingmar.factory.data.helper.GroupHelper;
 import cn.lingmar.factory.data.helper.MessageHelper;
 import cn.lingmar.factory.data.helper.UserHelper;
+import cn.lingmar.factory.persistence.Account;
 
 
 /**
@@ -223,6 +224,9 @@ public class Session extends BaseDbModel<Session> {
                 this.message = message;
                 this.content = message.getSampleContent();
                 this.modifyAt = message.getCreateAt();
+                // 当自己不为消息的发送者时，未读才进行增加
+                if (!Account.getUserId().equalsIgnoreCase(this.message.getSender().getId()))
+                    this.unReadCount++;
             }
         } else {
             // 和人聊天
@@ -263,6 +267,9 @@ public class Session extends BaseDbModel<Session> {
                 this.message = message;
                 this.content = message.getSampleContent();
                 this.modifyAt = message.getCreateAt();
+                // 当自己不为消息的发送者时，未读才进行增加
+                if (!Account.getUserId().equalsIgnoreCase(this.message.getSender().getId()))
+                    this.unReadCount++;
             }
         }
     }

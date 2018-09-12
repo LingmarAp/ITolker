@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="cn.lingmar.itolker">
 
     <!-- 网络相关 -->
@@ -27,6 +28,14 @@
             android:permission="1000">
             <intent-filter>
                 <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".LogoutReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.lingmar.LOGOUT" />
             </intent-filter>
         </receiver>
 

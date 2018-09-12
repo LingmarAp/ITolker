@@ -11,12 +11,26 @@
     android:paddingStart="@dimen/len_16"
     android:paddingTop="@dimen/len_10">
 
-    <cn.lingmar.common.widget.PortraitView
-        android:id="@+id/im_portrait"
-        android:layout_width="@dimen/portraitSize"
-        android:layout_height="@dimen/portraitSize"
+    <FrameLayout
+        android:layout_width="53dp"
+        android:layout_height="53dp"
         android:layout_gravity="start|center_vertical"
-        android:src="@drawable/default_portrait" />
+        android:src="@drawable/default_portrait">
+
+        <cn.lingmar.common.widget.PortraitView
+            android:id="@+id/im_portrait"
+            android:layout_width="@dimen/portraitSize"
+            android:layout_height="@dimen/portraitSize"
+            android:layout_gravity="start|center_vertical"
+            android:src="@drawable/default_portrait" />
+
+        <cn.lingmar.common.widget.MyTextView
+            android:id="@+id/txt_unread"
+            android:layout_marginStart="26dp"
+            android:layout_width="18dp"
+            android:textSize="@dimen/len_2"
+            android:layout_height="18dp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txt_name"

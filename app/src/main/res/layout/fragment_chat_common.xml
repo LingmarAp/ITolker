@@ -81,7 +81,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/textPrimary"
             android:textColorHint="@color/textSecond"
-            android:textCursorDrawable="@color/textSecond" />
+            android:textCursorDrawable="@color/textSecond"/>
 
         <ImageView
             android:id="@+id/btn_submit"

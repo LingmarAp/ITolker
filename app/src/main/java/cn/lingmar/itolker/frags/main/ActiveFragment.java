@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import butterknife.BindView;
 import cn.lingmar.common.app.PresenterFragment;
 import cn.lingmar.common.widget.EmptyView;
+import cn.lingmar.common.widget.MyTextView;
 import cn.lingmar.common.widget.PortraitView;
 import cn.lingmar.common.widget.recycler.RecyclerAdapter;
 import cn.lingmar.factory.model.db.Session;
@@ -91,6 +92,7 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
 
     @Override
     public void onAdapterDataChanged() {
+        mAdapter.notifyDataSetChanged();
         mPlaceHolderView.triggerOkOrEmpty(mAdapter.getItemCount() > 0);
     }
 
@@ -107,6 +109,9 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
         @BindView(R.id.txt_time)
         TextView mTime;
 
+        @BindView(R.id.txt_unread)
+        MyTextView mUnRead;
+
         public ViewHolder(View itemView) {
             super(itemView);
         }
@@ -117,6 +122,18 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
             mName.setText(session.getTitle());
             mContent.setText(TextUtils.isEmpty(session.getContent()) ? "" : session.getContent());
             mTime.setText(DateTimeUtil.getSampleDate(session.getModifyAt()));
+
+            // 设置是否显示未读信息的提示
+            if (session.getUnReadCount() > 0) {
+                mUnRead.setVisibility(View.VISIBLE);
+
+                mUnRead.setText(session.getUnReadCount() + "");
+                if (session.getUnReadCount() > 99) {
+                    mUnRead.setText("99+");
+                }
+            } else {
+                mUnRead.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

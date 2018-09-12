@@ -7,6 +7,8 @@ import android.text.TextUtils;
 
 import cn.lingmar.common.app.Activity;
 import cn.lingmar.common.app.Fragment;
+import cn.lingmar.factory.data.helper.DbHelper;
+import cn.lingmar.factory.data.helper.SessionHelper;
 import cn.lingmar.factory.model.Author;
 import cn.lingmar.factory.model.db.Group;
 import cn.lingmar.factory.model.db.Message;
@@ -24,6 +26,15 @@ public class MessageActivity extends Activity {
     private String mReceiverId;
     private boolean mIsGroup;
 
+    private static void reUnReadCount(Session session) {
+        if(session == null)
+            return ;
+
+        // 置空Session的未读取数量
+        session.setUnReadCount(0);
+        DbHelper.save(Session.class, session);
+    }
+
     /**
      * 显示人的聊天界面
      *
@@ -39,6 +50,8 @@ public class MessageActivity extends Activity {
                 session.getReceiverType() == Message.RECEIVER_TYPE_GROUP);
 
         context.startActivity(intent);
+
+        reUnReadCount(session);
     }
 
     /**
@@ -55,6 +68,9 @@ public class MessageActivity extends Activity {
         intent.putExtra(KEY_RECEIVER_IS_GROUP, false);
 
         context.startActivity(intent);
+
+        Session session = SessionHelper.findFromLocal(author.getId());
+        reUnReadCount(session);
     }
 
     public static void show(Context context, Group group) {
@@ -65,6 +81,9 @@ public class MessageActivity extends Activity {
         intent.putExtra(KEY_RECEIVER_IS_GROUP, true);
 
         context.startActivity(intent);
+
+        Session session = SessionHelper.findFromLocal(group.getId());
+        reUnReadCount(session);
     }
 
     @Override

@@ -16,11 +16,16 @@ import cn.lingmar.common.widget.convention.PlaceHolderView;
 public abstract class Activity extends AppCompatActivity {
     protected PlaceHolderView mPlaceHolderView;
 
+    protected static Activity currentActivity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initWindows();
+
+        // 保存当前的Activity
+        this.currentActivity = this;
 
         if (initArgs(getIntent().getExtras())) {
             // 得到界面Id并设置到Activity中
@@ -105,6 +110,10 @@ public abstract class Activity extends AppCompatActivity {
      */
     public void setPlaceHolderView(PlaceHolderView mPlaceHolderView) {
         this.mPlaceHolderView = mPlaceHolderView;
+    }
+
+    public static Activity getCurrentActivity() {
+        return currentActivity;
     }
 
 }
