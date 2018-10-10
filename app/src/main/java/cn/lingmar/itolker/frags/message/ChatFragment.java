@@ -43,7 +43,8 @@ import cn.lingmar.itolker.frags.panel.PanelFragment;
 public abstract class ChatFragment<InitModel>
         extends PresenterFragment<ChatContract.Presenter>
         implements AppBarLayout.OnOffsetChangedListener,
-        ChatContract.View<InitModel> {
+        ChatContract.View<InitModel>,
+        PanelFragment.PanelCallback {
 
     protected String mReceiverId;
     protected Adapter mAdapter;
@@ -80,6 +81,11 @@ public abstract class ChatFragment<InitModel>
     }
 
     @Override
+    public EditText getInputEditText() {
+        return mContent;
+    }
+
+    @Override
     protected final int getContentLayoutId() {
         return R.layout.fragment_chat_common;
     }
@@ -102,6 +108,7 @@ public abstract class ChatFragment<InitModel>
             Util.hideKeyboard(mContent);
         });
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
+        mPanelFragment.setup(this);
 
         initAppbar();
         initToolbar();
@@ -193,7 +200,7 @@ public abstract class ChatFragment<InitModel>
     @Override
     public void onAdapterDataChanged() {
         // 跳转到最底部
-        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
     private class Adapter extends RecyclerAdapter<Message> {

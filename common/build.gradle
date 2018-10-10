@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 //apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.2'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -38,6 +38,7 @@ dependencies {
     implementation "de.hdodenhof:circleimageview:$rootProject.ext.circleimageviewVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
     // 空气面板
     implementation "net.qiujuer.widget:airpanel:${rootProject.ext.airpanelVersion}"
@@ -48,4 +49,5 @@ dependencies {
 
 
     api project(':lang')
+    api project(':face-res')
 }
